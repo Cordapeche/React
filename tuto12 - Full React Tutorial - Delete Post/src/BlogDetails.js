@@ -1,0 +1,34 @@
+import { useParams, useHistory } from "react-router-dom";
+import useFetch from "./useFetch";
+
+const BlogDetails = () => {
+    const { id } = useParams();
+    const { data: blog, error, isPending } = useFetch('http://localhost:8000/blogs/' + id);
+    const history =useHistory();
+
+    const handClick = () => {
+        fetch('http://localhost:8000/blogs/' + blog.id, {            
+        method: 'DELETE'
+        }).then (() => {
+            history.push('/');
+        })
+
+    }
+    return ( 
+        <div className="blog-details">
+            { isPending && <div>Loading.. </div>}
+            {error && <div>{error}</div>}
+            {blog && (
+                <article>
+                <h2>{blog.title}</h2>
+                <div>{blog.body} </div>
+                <h6>Writen by {blog.author} </h6>
+                <button onClick={handClick}>Delete Blog</button>
+                </article>
+            )}
+        </div>        
+     );
+}
+
+ 
+export default BlogDetails;
